@@ -26,10 +26,16 @@ void setup() {
   Serial.begin(9600);
 }
 
+bool endpointFlag = false;
+
 void loop() {
   //read data
   thing.handle();
   sensors.requestTemperatures();
-  Serial.println(sensors.getTempFByIndex(0));
+  //Serial.println(sensors.getTempFByIndex(0));
+  if ( ( (sensors.getTempFByIndex(0) > 82) || (sensors.getTempFByIndex(0) < 75) ) && !endpointFlag){
+    thing.call_endpoint("poolTempWarningEmail",thing["poolTemp"]);
+  endpointFlag = true;
+  }
 }
 
